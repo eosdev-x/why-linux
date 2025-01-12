@@ -135,7 +135,7 @@ function App() {
 
         {/* Footer */}
         <footer className="py-8 px-4 text-center text-gray-600 dark:text-dracula-comment">
-          <p>© {new Date().getFullYear()} Linux Showcase. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} Why Linux? All rights reserved.</p>
         </footer>
       </div>
     </ThemeProvider>
