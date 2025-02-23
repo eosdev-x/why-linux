@@ -135,7 +135,7 @@ function App() {
 
         {/* Footer */}
 <footer className="py-8 px-4 text-center text-gray-600 dark:text-dracula-comment">
-  <p>© {new Date().getFullYear()} Why Linux? All rights reserved.</p>
+  <p>© {new Date().getFullYear()} Tux Street - All rights reserved.</p>
   <p>This site was inspired by my favorite site <a style={{color:"#50FA7B"}} href="https://distrowatch.com/" target="_blank" rel="noopener noreferrer">Distrowatch</a>.</p>
 </footer>
       </div>
