@@ -1,8 +1,11 @@
-import React from 'react';
+import { useState } from 'react';
 import { ThemeProvider } from './context/ThemeContext';
 import { ThemeToggle } from './components/ThemeToggle';
 import { DistributionCard } from './components/DistributionCard';
 import { InstallationGuide } from './components/InstallationGuide';
+import { LinuxCommands } from './components/LinuxCommands';
+import { Navbar } from './components/Navbar';
+import { ChatModal } from './components/ChatModal';
 import { Terminal, Shield, Zap, Code, Heart } from 'lucide-react';
 
 const distributions = [
@@ -73,13 +76,36 @@ const advantages = [
 ];
 
 function App() {
+  const [activePage, setActivePage] = useState('home');
+  const [isChatOpen, setIsChatOpen] = useState(false);
+
+  const handlePageChange = (page: string) => {
+    setActivePage(page);
+  };
+  
+  const handleOpenAiChat = () => {
+    setIsChatOpen(true);
+  };
+  
+  const handleCloseAiChat = () => {
+    setIsChatOpen(false);
+  };
+
   return (
     <ThemeProvider>
       <div className="min-h-screen bg-gray-50 dark:bg-dracula-background transition-colors duration-300">
         <ThemeToggle />
+        <Navbar 
+          activePage={activePage} 
+          onPageChange={handlePageChange} 
+          onAiChatOpen={handleOpenAiChat} 
+        />
+        <ChatModal isOpen={isChatOpen} onClose={handleCloseAiChat} />
         
-        {/* Hero Section */}
-        <header className="py-20 px-4 text-center">
+        {activePage === 'home' && (
+          <>
+            {/* Hero Section */}
+            <header className="pt-32 pb-20 px-4 text-center">
           <h1 className="text-5xl font-bold mb-6 dark:text-dracula-foreground">
             Experience the Power of Linux
           </h1>
@@ -132,6 +158,10 @@ function App() {
         <section className="py-16 px-4 bg-white dark:bg-dracula-current">
           <InstallationGuide />
         </section>
+          </>
+        )}
+
+        {activePage === 'linux-commands' && <LinuxCommands />}
 
         {/* Footer */}
 <footer className="py-8 px-4 text-center text-gray-600 dark:text-dracula-comment">
