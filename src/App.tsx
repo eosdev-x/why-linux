@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { ThemeProvider } from './context/ThemeContext';
-import { ThemeToggle } from './components/ThemeToggle';
 import { DistributionCard } from './components/DistributionCard';
 import { InstallationGuide } from './components/InstallationGuide';
 import { LinuxCommands } from './components/LinuxCommands';
@@ -94,7 +93,6 @@ function App() {
   return (
     <ThemeProvider>
       <div className="min-h-screen bg-gray-50 dark:bg-dracula-background transition-colors duration-300">
-        <ThemeToggle />
         <Navbar 
           activePage={activePage} 
           onPageChange={handlePageChange} 

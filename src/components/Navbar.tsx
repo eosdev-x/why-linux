@@ -1,6 +1,7 @@
 
 import { Terminal, Cpu } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
+import { ThemeToggle } from './ThemeToggle';
 
 interface NavbarProps {
   activePage: string;
@@ -50,6 +51,10 @@ export function Navbar({ activePage, onPageChange, onAiChatOpen }: NavbarProps) 
           <Cpu className="w-4 h-4 mr-1" />
           AI
         </button>
+        
+        <div className="ml-2">
+          <ThemeToggle />
+        </div>
       </div>
     </nav>
   );
