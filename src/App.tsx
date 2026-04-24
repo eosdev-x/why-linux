@@ -17,25 +17,25 @@ const distributions = [
   {
     name: "Fedora",
     description: "Leading-edge Linux distribution, balancing innovation with stability.",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Fedora_logo.svg/2048px-Fedora_logo.svg.png",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/3/3f/Fedora_logo.svg",
     downloadUrl: "https://getfedora.org/workstation/download/"
   },
   {
     name: "Linux Mint",
     description: "Traditional desktop experience with modern features and broad hardware support.",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Linux_Mint_logo_without_wordmark.svg/1200px-Linux_Mint_logo_without_wordmark.svg.png",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/The_Linux_Mint_Logo.svg/500px-The_Linux_Mint_Logo.svg.png",
     downloadUrl: "https://linuxmint.com/download.php"
   },
   {
     name: "Manjaro",
     description: "User-friendly Arch-based distribution with rolling releases.",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Manjaro-logo.svg/2048px-Manjaro-logo.svg.png",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/3/3e/Manjaro-logo.svg",
     downloadUrl: "https://manjaro.org/download/"
   },
   {
     name: "OpenSUSE",
     description: "Enterprise-grade distribution perfect for both desktop and server use.",
-    logo: "https://static.opensuse.org/favicon.svg",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/OpenSUSE_Logo.svg/500px-OpenSUSE_Logo.svg.png",
     downloadUrl: "https://get.opensuse.org/"
   },
   {
