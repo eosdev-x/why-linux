@@ -23,7 +23,7 @@ const distributions = [
   {
     name: "Linux Mint",
     description: "Traditional desktop experience with modern features and broad hardware support.",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/The_Linux_Mint_Logo.svg/500px-The_Linux_Mint_Logo.svg.png",
+    logo: "/logos/linux-mint.svg",
     downloadUrl: "https://linuxmint.com/download.php"
   },
   {
