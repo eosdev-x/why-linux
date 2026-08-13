@@ -1,119 +1,70 @@
-import { useState } from 'react';
-import { Search } from 'lucide-react';
+import { useMemo, useState } from 'react';
 import { commands } from '../data/linuxCommands';
 
-// Command categories
 const categories = [
-  { id: 'file', name: 'File Management' },
-  { id: 'process', name: 'Process Management' },
-  { id: 'system', name: 'System Information' },
-  { id: 'network', name: 'Networking' },
-  { id: 'text', name: 'Text Processing' },
+  { id: 'all', name: 'All' },
+  { id: 'file', name: 'Files' },
+  { id: 'process', name: 'Processes' },
+  { id: 'system', name: 'System' },
+  { id: 'network', name: 'Network' },
+  { id: 'text', name: 'Text' },
   { id: 'permissions', name: 'Permissions' },
-  { id: 'compression', name: 'Compression' },
-  { id: 'package', name: 'Package Management' },
+  { id: 'compression', name: 'Archives' },
+  { id: 'package', name: 'Packages' },
 ];
 
-
-
 export function LinuxCommands() {
-  const [activeCategory, setActiveCategory] = useState('file');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [category, setCategory] = useState('all');
+  const [query, setQuery] = useState('');
 
-  // Filter commands by active category and search query
-  const filteredCommands = commands
-    .filter(cmd => 
-      (activeCategory === 'all' || cmd.category === activeCategory) &&
-      (searchQuery === '' || 
-       cmd.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-       cmd.description.toLowerCase().includes(searchQuery.toLowerCase()))
-    )
-    // Sort alphabetically by name when "All" is selected or when searching
-    .sort((a, b) => {
-      if (activeCategory === 'all' || searchQuery !== '') {
-        return a.name.localeCompare(b.name);
-      }
-      return 0; // maintain original order for category filters
-    });
+  const rows = useMemo(() => {
+    const q = query.toLowerCase();
+    return commands.filter(
+      (cmd) =>
+        (category === 'all' || cmd.category === category) &&
+        (!q || cmd.name.toLowerCase().includes(q) || cmd.description.toLowerCase().includes(q))
+    );
+  }, [category, query]);
 
   return (
-    <div className="pt-16 pb-12 min-h-screen">
-      <div className="max-w-6xl mx-auto px-4">
-        <h1 className="text-3xl font-bold mt-8 mb-6 text-center dark:text-dracula-foreground">
-          Linux Commands Reference
-        </h1>
-        
-        {/* Search Bar */}
-        <div className="relative max-w-md mx-auto mb-8">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Search className="h-5 w-5 text-gray-400 dark:text-dracula-comment" />
-          </div>
-          <input
-            type="text"
-            placeholder="Search commands..."
-            className="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-dracula-current rounded-md 
-                      bg-white dark:bg-dracula-current text-gray-900 dark:text-dracula-foreground
-                      focus:outline-none focus:ring-2 focus:ring-violet-500 dark:focus:ring-dracula-purple"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </div>
-        
-        {/* Category Tabs */}
-        <div className="flex flex-wrap justify-center mb-8 gap-2">
-          <button
-            onClick={() => setActiveCategory('all')}
-            className={`px-3 py-1 rounded-md text-sm transition-colors duration-300 ${
-              activeCategory === 'all'
-                ? 'bg-violet-600 dark:bg-dracula-purple text-white'
-                : 'bg-gray-100 dark:bg-dracula-current text-gray-700 dark:text-dracula-comment hover:bg-gray-200 dark:hover:bg-dracula-current/70'
-            }`}
-          >
-            All
-          </button>
-          
-          {categories.map(category => (
-            <button
-              key={category.id}
-              onClick={() => setActiveCategory(category.id)}
-              className={`px-3 py-1 rounded-md text-sm transition-colors duration-300 ${
-                activeCategory === category.id
-                  ? 'bg-violet-600 dark:bg-dracula-purple text-white'
-                  : 'bg-gray-100 dark:bg-dracula-current text-gray-700 dark:text-dracula-comment hover:bg-gray-200 dark:hover:bg-dracula-current/70'
-              }`}
-            >
-              {category.name}
-            </button>
-          ))}
-        </div>
-        
-        {/* Commands List */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {filteredCommands.map((command, index) => (
-            <div 
-              key={index} 
-              className="bg-white dark:bg-dracula-current rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow duration-300"
-            >
-              <h3 className="text-xl font-bold mb-2 text-violet-700 dark:text-dracula-purple">{command.name}</h3>
-              <p className="text-gray-600 dark:text-dracula-comment mb-3">{command.description}</p>
-              
-              <div className="bg-gray-100 dark:bg-dracula-background rounded-md p-3 mb-3 overflow-x-auto">
-                <pre className="text-gray-800 dark:text-dracula-foreground font-mono text-sm">{command.syntax}</pre>
-              </div>
-              
-              <div className="bg-gray-100 dark:bg-dracula-background rounded-md p-3 overflow-x-auto">
-                <pre className="text-gray-800 dark:text-dracula-foreground font-mono text-sm">{command.example}</pre>
-              </div>
+    <section className="page active" id="page-commands">
+      <div className="wrap">
+        <p className="kicker">Keep this next to the keyboard</p>
+        <h1 style={{ fontSize: 'clamp(2rem,4vw,3.4rem)', marginBottom: '1.2rem' }}>Command atlas</h1>
+        <div className="atlas">
+          <aside>
+            <input
+              className="search"
+              type="search"
+              placeholder="grep the atlas…"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+            />
+            <div className="cats">
+              {categories.map((cat) => (
+                <button
+                  key={cat.id}
+                  type="button"
+                  aria-pressed={category === cat.id}
+                  onClick={() => setCategory(cat.id)}
+                >
+                  {cat.name}
+                </button>
+              ))}
             </div>
-          ))}
-        </div>
-        
-        {filteredCommands.length === 0 && (
-          <div className="text-center py-8 text-gray-500 dark:text-dracula-comment">
-            No commands found matching your search.
+          </aside>
+          <div className="cmd-grid">
+            {rows.length === 0 && <p className="empty">Nothing in the atlas matches that.</p>}
+            {rows.map((cmd) => (
+              <article className="cmd-card" key={`${cmd.category}-${cmd.name}`}>
+                <h3>{cmd.name}</h3>
+                <p>{cmd.description}</p>
+                <pre className="code">{`${cmd.syntax}\n${cmd.example}`}</pre>
+              </article>
+            ))}
           </div>
-        )}
+        </div>
       </div>
-    </div>
+    </section>
   );
 }

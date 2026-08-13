@@ -1,174 +1,112 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ThemeProvider } from './context/ThemeContext';
-import { DistributionCard } from './components/DistributionCard';
+import { Masthead } from './components/Masthead';
+import { LiveTerminal } from './components/LiveTerminal';
+import { DistroMatcher } from './components/DistroMatcher';
 import { InstallationGuide } from './components/InstallationGuide';
 import { LinuxCommands } from './components/LinuxCommands';
-import { Navbar } from './components/Navbar';
-import { ChatModal } from './components/ChatModal';
-import { Terminal, Shield, Zap, Code, Heart } from 'lucide-react';
+import { AskTux } from './components/AskTux';
+import { claims } from './data/gazette';
 
-const distributions = [
-  {
-    name: "Ubuntu",
-    description: "Perfect for beginners, featuring a user-friendly interface and extensive software support.",
-    logo: "https://assets.ubuntu.com/v1/29985a98-ubuntu-logo32.png",
-    downloadUrl: "https://ubuntu.com/download/desktop"
-  },
-  {
-    name: "Fedora",
-    description: "Leading-edge Linux distribution, balancing innovation with stability.",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/3/3f/Fedora_logo.svg",
-    downloadUrl: "https://getfedora.org/workstation/download/"
-  },
-  {
-    name: "Linux Mint",
-    description: "Traditional desktop experience with modern features and broad hardware support.",
-    logo: "/logos/linux-mint.svg",
-    downloadUrl: "https://linuxmint.com/download.php"
-  },
-  {
-    name: "Manjaro",
-    description: "User-friendly Arch-based distribution with rolling releases.",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/3/3e/Manjaro-logo.svg",
-    downloadUrl: "https://manjaro.org/download/"
-  },
-  {
-    name: "OpenSUSE",
-    description: "Enterprise-grade distribution perfect for both desktop and server use.",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/OpenSUSE_Logo.svg/500px-OpenSUSE_Logo.svg.png",
-    downloadUrl: "https://get.opensuse.org/"
-  },
-  {
-    name: "Debian",
-    description: "The universal operating system, known for stability and security.",
-    logo: "https://www.debian.org/logos/openlogo-nd.svg",
-    downloadUrl: "https://www.debian.org/download"
-  }
-];
+type Page = 'home' | 'commands' | 'chat';
 
-const advantages = [
-  {
-    icon: <Shield className="w-8 h-8" />,
-    title: "Security",
-    description: "Superior security model with frequent updates and robust permission system"
-  },
-  {
-    icon: <Zap className="w-8 h-8" />,
-    title: "Performance",
-    description: "Efficient resource usage and customizable system optimization"
-  },
-  {
-    icon: <Terminal className="w-8 h-8" />,
-    title: "Control",
-    description: "Complete control over your system with powerful command-line tools"
-  },
-  {
-    icon: <Code className="w-8 h-8" />,
-    title: "Open Source",
-    description: "Free and open-source software with transparent development"
-  },
-  {
-    icon: <Heart className="w-8 h-8" />,
-    title: "Community",
-    description: "Active community support and extensive documentation"
-  }
-];
+function parsePage(hash: string): Page {
+  const value = hash.replace('#', '');
+  if (value === 'commands' || value === 'chat' || value === 'home') return value;
+  return 'home';
+}
 
-function App() {
-  const [activePage, setActivePage] = useState('home');
-  const [isChatOpen, setIsChatOpen] = useState(false);
+function Gazette() {
+  const [page, setPage] = useState<Page>(() => parsePage(window.location.hash));
 
-  const handlePageChange = (page: string) => {
-    setActivePage(page);
+  const go = (next: string) => {
+    const resolved = parsePage(next);
+    setPage(resolved);
+    window.history.replaceState(null, '', `#${resolved}`);
   };
-  
-  const handleOpenAiChat = () => {
-    setIsChatOpen(true);
-  };
-  
-  const handleCloseAiChat = () => {
-    setIsChatOpen(false);
-  };
+
+  useEffect(() => {
+    const onHash = () => setPage(parsePage(window.location.hash));
+    window.addEventListener('hashchange', onHash);
+    return () => window.removeEventListener('hashchange', onHash);
+  }, []);
 
   return (
-    <ThemeProvider>
-      <div className="min-h-screen bg-gray-50 dark:bg-dracula-background transition-colors duration-300">
-        <Navbar 
-          activePage={activePage} 
-          onPageChange={handlePageChange} 
-          onAiChatOpen={handleOpenAiChat} 
-        />
-        <ChatModal isOpen={isChatOpen} onClose={handleCloseAiChat} />
-        
-        {activePage === 'home' && (
-          <>
-            {/* Hero Section */}
-            <header className="pt-32 pb-20 px-4 text-center">
-          <h1 className="text-5xl font-bold mb-6 dark:text-dracula-foreground">
-            Experience the Power of Linux
-          </h1>
-          <p className="text-xl text-gray-600 dark:text-dracula-comment max-w-2xl mx-auto">
-            Discover freedom, security, and performance with Linux - the open-source operating system
-            that puts you in control.
-          </p>
-        </header>
-
-        {/* Advantages Section */}
-        <section className="py-16 px-4 bg-white dark:bg-dracula-current">
-          <div className="max-w-6xl mx-auto">
-            <h2 className="text-3xl font-bold text-center mb-12 dark:text-dracula-foreground">
-              Why Choose Linux?
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {advantages.map((advantage, index) => (
-                <div key={index} className="p-6 rounded-lg bg-gray-50 dark:bg-dracula-background
-                                         hover:shadow-lg transition-all duration-300">
-                  <div className="text-violet-600 dark:text-dracula-purple mb-4">
-                    {advantage.icon}
-                  </div>
-                  <h3 className="text-xl font-semibold mb-2 dark:text-dracula-foreground">
-                    {advantage.title}
-                  </h3>
-                  <p className="text-gray-600 dark:text-dracula-comment">
-                    {advantage.description}
-                  </p>
+    <>
+      <Masthead page={page} onPageChange={go} />
+      <main>
+        {page === 'home' && (
+          <section className="page active">
+            <div className="wrap hero">
+              <div>
+                <p className="kicker">A field guide for people who want their computer back</p>
+                <h1>Windows is a lease. Linux is the deed.</h1>
+                <p className="lede">
+                  Tux Street is not another “discover the power of open source” brochure. It is a
+                  switcher’s gazette: pick a distro that matches your temperament, walk the install
+                  without folklore, and keep a command atlas by the keyboard.
+                </p>
+                <div className="cta-row">
+                  <button
+                    className="cta"
+                    type="button"
+                    onClick={() => document.getElementById('matcher')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+                  >
+                    Find a distro
+                  </button>
+                  <button className="cta alt" type="button" onClick={() => go('commands')}>
+                    Browse the atlas
+                  </button>
                 </div>
-              ))}
+              </div>
+              <LiveTerminal />
             </div>
-          </div>
-        </section>
 
-        {/* Distributions Section */}
-        <section className="py-16 px-4">
-          <div className="max-w-6xl mx-auto">
-            <h2 className="text-3xl font-bold text-center mb-12 dark:text-dracula-foreground">
-              Choose Your Distribution
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {distributions.map((dist, index) => (
-                <DistributionCard key={index} {...dist} />
-              ))}
+            <div className="wrap">
+              <hr className="rule" />
+              <div className="claims">
+                <h2>Why switch</h2>
+                <div>
+                  {claims.map((claim) => (
+                    <article className="claim" key={claim.num}>
+                      <div className="num">{claim.num}</div>
+                      <div>
+                        <h3>{claim.title}</h3>
+                        <p>{claim.body}</p>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              </div>
+              <DistroMatcher onAskTux={() => go('chat')} />
+              <InstallationGuide />
             </div>
-          </div>
-        </section>
-
-        {/* Installation Guide Section */}
-        <section className="py-16 px-4 bg-white dark:bg-dracula-current">
-          <InstallationGuide />
-        </section>
-          </>
+          </section>
         )}
 
-        {activePage === 'linux-commands' && <LinuxCommands />}
-
-        {/* Footer */}
-<footer className="py-8 px-4 text-center text-gray-600 dark:text-dracula-comment">
-  <p>© {new Date().getFullYear()} Tux Street - All rights reserved.</p>
-  <p>This site was inspired by my favorite site <a style={{color:"#50FA7B"}} href="https://distrowatch.com/" target="_blank" rel="noopener noreferrer">Distrowatch</a>.</p>
-</footer>
-      </div>
-    </ThemeProvider>
+        {page === 'commands' && <LinuxCommands />}
+        {page === 'chat' && <AskTux />}
+      </main>
+      <footer>
+        <div className="wrap">
+          <div>© {new Date().getFullYear()} Tux Street. A gazette for people leaving Windows.</div>
+          <div>
+            Inspired by{' '}
+            <a href="https://distrowatch.com/" target="_blank" rel="noopener noreferrer">
+              Distrowatch
+            </a>{' '}
+            — still the honest ledger of this world.
+          </div>
+        </div>
+      </footer>
+    </>
   );
 }
 
-export default App;
+export default function App() {
+  return (
+    <ThemeProvider>
+      <Gazette />
+    </ThemeProvider>
+  );
+}

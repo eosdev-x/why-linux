@@ -1,56 +1,39 @@
-import React from 'react';
-
-const steps = [
-  {
-    title: "Download the ISO",
-    description: "Choose your preferred Linux distribution and download the ISO file from the official website."
-  },
-  {
-    title: "Create Bootable USB",
-    description: "Use tools like Rufus, Etcher, or dd to create a bootable USB drive with the ISO."
-  },
-  {
-    title: "Back Up Your Data",
-    description: "Before installation, back up all important data from your Windows system."
-  },
-  {
-    title: "Boot from USB",
-    description: "Restart your computer and boot from the USB drive (usually by pressing F12 or Del)."
-  },
-  {
-    title: "Start Installation",
-    description: "Follow the distribution's installer, choosing language and keyboard layout."
-  },
-  {
-    title: "Partition Drives",
-    description: "Create or modify partitions as needed. Consider dual-boot if keeping Windows."
-  },
-  {
-    title: "Complete Setup",
-    description: "Set up your user account, timezone, and other preferences."
-  }
-];
+import { useState } from 'react';
+import { steps } from '../data/gazette';
 
 export function InstallationGuide() {
+  const [index, setIndex] = useState(0);
+  const step = steps[index];
+
   return (
-    <div className="max-w-4xl mx-auto py-12">
-      <h2 className="text-3xl font-bold mb-8 text-center dark:text-dracula-foreground">
-        Installation Guide
-      </h2>
-      <div className="space-y-6">
-        {steps.map((step, index) => (
-          <div key={index} className="flex items-start space-x-4">
-            <div className="flex-shrink-0 w-8 h-8 rounded-full bg-violet-600 dark:bg-dracula-purple 
-                          flex items-center justify-center text-white font-bold">
-              {index + 1}
-            </div>
-            <div>
-              <h3 className="text-xl font-semibold mb-2 dark:text-dracula-foreground">{step.title}</h3>
-              <p className="text-gray-600 dark:text-dracula-comment">{step.description}</p>
-            </div>
+    <section className="install">
+      <p className="kicker">From ISO to first boot</p>
+      <div className="steps">
+        <div>
+          <h2 style={{ fontFamily: 'Fraunces, Georgia, serif', letterSpacing: '-.03em', margin: '.2rem 0 1rem' }}>
+            Installation, without the campfire stories
+          </h2>
+          <div className="step-list">
+            {steps.map((s, i) => (
+              <button
+                key={s.title}
+                type="button"
+                className="step"
+                aria-current={i === index ? 'step' : undefined}
+                onClick={() => setIndex(i)}
+              >
+                <b>{String(i + 1).padStart(2, '0')}  {s.title}</b>
+              </button>
+            ))}
           </div>
-        ))}
+        </div>
+        <div className="panel step-copy">
+          <div className="who">Step {String(index + 1).padStart(2, '0')}</div>
+          <h3>{step.title}</h3>
+          <p>{step.body}</p>
+          <pre className="code">{step.code}</pre>
+        </div>
       </div>
-    </div>
+    </section>
   );
 }
