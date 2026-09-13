@@ -4,7 +4,8 @@ export type DistroKey =
   | 'windows'
   | 'rolling'
   | 'adult'
-  | 'bedrock';
+  | 'bedrock'
+  | 'omakase';
 
 export interface Distro {
   who: string;
@@ -85,6 +86,18 @@ export const distros: Record<DistroKey, Distro> = {
     ],
     url: 'https://www.debian.org/download',
   },
+  omakase: {
+    who: 'For the person who wants the kitchen to already have a menu',
+    name: 'Omarchy',
+    blurb:
+      'Omakase for the desktop. Arch Linux, Hyprland, and defaults that look finished on first boot — agents treated as first-class, not an afterthought.',
+    facts: [
+      ['Base', 'Arch'],
+      ['Desktop', 'Hyprland'],
+      ['Best if', 'You want a designed system, not a kit of parts'],
+    ],
+    url: 'https://omarchy.org',
+  },
 };
 
 export const picks: [DistroKey, string, string][] = [
@@ -94,4 +107,5 @@ export const picks: [DistroKey, string, string][] = [
   ['rolling', 'I will tinker', 'Rolling release, but skip the hazing.'],
   ['adult', 'Give me levers', 'I want a real control panel and snapshots.'],
   ['bedrock', 'Never surprise me', 'Stability over fashion.'],
+  ['omakase', 'Chef\'s choice', 'Opinionated Arch. Looks finished. Agents included.'],
 ];

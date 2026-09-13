@@ -21,6 +21,9 @@ function answer(q: string): string {
   if (s.includes('debian')) {
     return 'Debian Stable is a stone floor. If you hate surprises more than you love new toys, start there.';
   }
+  if (s.includes('omarchy') || s.includes('omakase')) {
+    return 'Omarchy is Arch already plated. Hyprland, a finished desktop, agents as first-class. DHH calls it omakase. If you want the chef to pick and still keep the kitchen, start there.';
+  }
   if (s.includes('manjaro') || s.includes('arch')) {
     return 'Manjaro is Arch with the sharp corners taped. You still get the AUR. You skip the first-weekend rite of passage.';
   }
