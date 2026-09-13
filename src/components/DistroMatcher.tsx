@@ -14,7 +14,7 @@ export function DistroMatcher({ onAskTux }: DistroMatcherProps) {
       <div className="panel">
         <p className="kicker">Temperament, not brand loyalty</p>
         <h2>Choose by how you want to live</h2>
-        <p className="sub">Six respectable desktops. One of them will fit your patience, not just your hardware.</p>
+        <p className="sub">Seven respectable desktops. One of them will fit your patience, not just your hardware.</p>
         <div className="picks">
           {picks.map(([id, title, sub]) => (
             <button
